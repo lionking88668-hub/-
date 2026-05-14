@@ -1,0 +1,61 @@
+def read_file(file_name):
+    names = []
+    scores = []
+    with open(file_name) as f:
+        for line in f:
+            name,score = line.split(',')
+            score = score.strip()
+            names.append(name)
+            scores.append(int(score))
+    return names,scores
+
+def calc_scores(scores):
+    avg_score = sum(scores)/len(scores)
+    max_score = max(scores)
+    min_score = min(scores)
+    return avg_score,max_score,min_score
+
+def count_by_range(scores):
+    range_dict = {
+        '0-59':0,
+        '60-69':0,
+        '70-79':0,
+        '80-89':0,
+        '90-100':0,
+    }
+    for score in scores:
+        if 0<= score <= 59:
+            range_dict['0-59'] += 1
+        elif 60<= score < 70:
+            range_dict['60-69'] += 1
+        elif 70<= score < 80:
+            range_dict['70-79'] += 1
+        elif 80<= score < 90:
+            range_dict['80-89'] += 1
+        elif 90<= score <= 100:
+            range_dict['90-100'] += 1
+    return range_dict
+
+def generate_report(names,scores,max_score,min_score,avg_score,range_dict):
+    max_index = scores.index(max_score)
+    min_index = scores.index(min_score)
+    max_name = names[max_index]
+    min_name = names[min_index]
+    with open('report.txt','w',encoding='utf-8') as f:
+        f.write(f'平均分：{avg_score:.2f}\n')
+        f.write(f'最低分：{min_score:.2f}({min_name})\n')
+        f.write(f'最高分：{max_score:.2f}({max_name})\n')
+        print('分数段分布\n')
+        for key,value in range_dict.items():
+            bar = '████' * value
+            f.write(f'{key}分:{value}人{bar}\n')
+
+
+
+
+names, scores = read_file('scores.txt')
+avg_score,max_score,min_score = calc_scores(scores)
+range_dict=count_by_range(scores)
+generate_report(names,scores,max_score,min_score,avg_score,range_dict)
+
+print('✅ 成绩统计报告已生成！请查看 report.txt')
