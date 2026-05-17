@@ -1,0 +1,67 @@
+def add_contact(file_name,contact):
+    name = input('姓名:')
+    phone = input('电话：')
+    email = input('邮箱：')
+    contact[name] = [phone,email]
+    with open(file_name,'a',encoding='utf-8') as f:
+        f.write(f'{name},{phone},{email}\n')
+
+def find_contact(contact):
+    key = input('请输入姓名：').strip()
+    info = contact.get(key)
+    if info is None:
+        print('联系人不存在！')
+    else:
+        print(f'姓名：{key} | 电话：{info[0]} | 邮箱：{info[1]}')
+
+def del_contact(file_name,contact):
+    key = input('请输入姓名：')
+    if key in contact:
+        contact.pop(key)
+        with open(file_name, 'w', encoding='utf-8') as f:
+            for name,value in contact.items():
+                f.write(f'{name},{value[0]},{value[1]}\n')
+        print('联系人删除成功！')
+    else:
+        print('联系人不存在！')
+
+
+def show_contact(contact):
+    print('========== 通讯录列表 ==========')
+
+    for key in sorted(contact.keys()):
+        value = contact[key]
+        print(f'姓名：{key} | 电话：{value[0]} | 邮箱：{value[1]}\n')
+
+
+def generate_contact(file_name,contact):
+    while True:
+        operation = input('''
+1. 添加联系⼈
+2. 查找联系⼈
+3. 删除联系⼈
+4. 显示所有联系⼈
+5. 退出
+请选择操作(1-5):
+''')
+        if operation == '1':
+            add_contact(file_name,contact)
+        elif operation == '2':
+            find_contact(contact)
+        elif operation == '3':
+            del_contact(file_name,contact)
+        elif operation == '4':
+            show_contact(contact)
+        elif operation == '5':
+            break
+        else:
+            print('请重新输入！')
+
+contact = {}
+generate_contact('contact.txt', contact)
+
+
+
+
+
+
